@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/question_text.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,23 +9,28 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  int questionIndex = 1;
+  int questionIndex = 0;
   int counter = 1;
+  List<Map> questions = [
+    {
+      'questionText': 'Whats your favorite color?',
+      'answers': ['Orange', 'Blue', 'Red', 'Black']
+    },
+    {
+      'questionText': 'Whats your favorite movie?',
+      'answers': ['Gravity Falls', 'Naruto', 'Spiderman']
+    },
+  ];
 
   void handleButtonPressed() {
     setState(() {
+      questionIndex += 1;
       counter += 1;
     });
-    print(counter);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> questions = [
-      'Whats your favorite color?',
-      'Whats your favorite movie?',
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -33,7 +39,7 @@ class MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Text(counter.toString()),
+            QuestionText(text: counter.toString() + ' Putang ina bobo'),
             ElevatedButton(
               child: Text("Answer 1"),
               onPressed: handleButtonPressed,
