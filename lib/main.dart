@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/answer_button.dart';
 import 'package:learn_flutter/question_text.dart';
 
 void main() => runApp(MyApp());
@@ -9,23 +10,25 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  int questionIndex = 0;
-  int counter = 1;
-  List<Map> questions = [
+  int _questionIndex = 0;
+  final _questions = const [
     {
       'questionText': 'Whats your favorite color?',
-      'answers': ['Orange', 'Blue', 'Red', 'Black']
+      'answers': ['Orange', 'Blue', 'Red', 'Black'],
     },
     {
       'questionText': 'Whats your favorite movie?',
-      'answers': ['Gravity Falls', 'Naruto', 'Spiderman']
+      'answers': ['Gravity Falls', 'Naruto', 'Spiderman'],
+    },
+    {
+      'questionText': 'Whats your favorite programming language?',
+      'answers': ['Dart', 'PHP', 'Javascript'],
     },
   ];
 
   void handleButtonPressed() {
     setState(() {
-      questionIndex += 1;
-      counter += 1;
+      _questionIndex += 1;
     });
   }
 
@@ -37,23 +40,22 @@ class MyAppState extends State<MyApp> {
           title: const Text('Learn Flutter'),
           backgroundColor: Colors.blueAccent,
         ),
-        body: Column(
-          children: [
-            QuestionText(text: counter.toString() + ' Putang ina bobo'),
-            ElevatedButton(
-              child: Text("Answer 1"),
-              onPressed: handleButtonPressed,
-            ),
-            ElevatedButton(
-              child: Text("Answer 2"),
-              onPressed: null,
-            ),
-            ElevatedButton(
-              child: Text("Answer 3"),
-              onPressed: null,
-            ),
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Column(
+                children: [
+                  QuestionText(
+                      text:
+                          _questions[_questionIndex]['questionText'] as String),
+                  ...(_questions[_questionIndex]['answers'] as List<String>)
+                      .map((row) => AnswerButton(
+                            row,
+                            onClick: handleButtonPressed,
+                          )),
+                ],
+              )
+            : Center(
+                child: Text('You did it!'),
+              ),
       ),
     );
   }
