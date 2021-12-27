@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/answer_button.dart';
 import 'package:learn_flutter/question_text.dart';
+import 'package:learn_flutter/quiz.dart';
+import 'package:learn_flutter/result.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,24 +13,46 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   int _questionIndex = 0;
+  int _scores = 0;
   final _questions = const [
     {
       'questionText': 'Whats your favorite color?',
-      'answers': ['Orange', 'Blue', 'Red', 'Black'],
+      'answers': [
+        {'name': 'Orange', 'score': 5},
+        {'name': 'Blue', 'score': 3},
+        {'name': 'Red', 'score': 8},
+        {'name': 'Black', 'score': 10},
+      ],
     },
     {
       'questionText': 'Whats your favorite movie?',
-      'answers': ['Gravity Falls', 'Naruto', 'Spiderman'],
+      'answers': [
+        {'name': 'Gravity Falls', 'score': 10},
+        {'name': 'Naruto', 'score': 8},
+        {'name': 'Spiderman', 'score': 5},
+      ],
     },
     {
       'questionText': 'Whats your favorite programming language?',
-      'answers': ['Dart', 'PHP', 'Javascript'],
+      'answers': [
+        {'name': 'PHP', 'score': 5},
+        {'name': 'Dart', 'score': 10},
+        {'name': 'JavaScript', 'score': 8},
+      ],
     },
   ];
 
-  void handleButtonPressed() {
+  void handleReset() {
+    setState(() {
+      _questionIndex = 0;
+      _scores = 0;
+    });
+  }
+
+  void handleAnswer(Map answer) {
     setState(() {
       _questionIndex += 1;
+      _scores += (answer['score'] as int);
     });
   }
 
@@ -41,20 +65,13 @@ class MyAppState extends State<MyApp> {
           backgroundColor: Colors.blueAccent,
         ),
         body: _questionIndex < _questions.length
-            ? Column(
-                children: [
-                  QuestionText(
-                      text:
-                          _questions[_questionIndex]['questionText'] as String),
-                  ...(_questions[_questionIndex]['answers'] as List<String>)
-                      .map((row) => AnswerButton(
-                            row,
-                            onClick: handleButtonPressed,
-                          )),
-                ],
+            ? Quiz(
+                question: _questions[_questionIndex],
+                onAnswer: handleAnswer,
               )
-            : Center(
-                child: Text('You did it!'),
+            : Result(
+                scores: _scores,
+                onReset: handleReset,
               ),
       ),
     );
